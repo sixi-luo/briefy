@@ -1,0 +1,13 @@
+---
+alwaysApply: true
+---
+
+# 运行命令规则
+
+## Python 脚本执行
+
+- **必须使用 `uv run`** 来运行 Python 脚本和命令，而不是直接使用 `python` 或 `python3`
+- 例如：
+  - `uv run test-aggregator.py`
+  - `uv run python -c "..."`
+  - `uv run main.py`

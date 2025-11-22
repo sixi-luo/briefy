@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Briefy · Sample Data</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💭</text></svg>" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0f0f0f 0%, #3d2817 50%, #0f0f0f 100%);
+            color: #d1d5db;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 装饰性背景 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 80px;
+            left: 40px;
+            width: 288px;
+            height: 288px;
+            background: rgba(217, 119, 6, 0.08);
+            border-radius: 50%;
+            filter: blur(60px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: 80px;
+            right: 40px;
+            width: 384px;
+            height: 384px;
+            background: rgba(251, 191, 36, 0.05);
+            border-radius: 50%;
+            filter: blur(60px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            z-index: 10;
+            padding: 16px 24px;
+            flex-shrink: 0;
+        }
+
+        .header-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header-title {
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .header-title h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+        }
+
+        .header-title p {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        .date-picker {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(251, 191, 36, 0.1);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .date-picker:hover {
+            background: rgba(251, 191, 36, 0.15);
+            border-color: rgba(251, 191, 36, 0.3);
+        }
+
+        .date-picker label {
+            color: #fbbf24;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .date-picker input[type="date"] {
+            background: transparent;
+            border: none;
+            color: #fbbf24;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .date-picker input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(0.7) sepia(1) saturate(5) hue-rotate(10deg);
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+            padding: 0 24px 24px;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main>* {
+            max-width: 1280px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Page Meta */
+        .page-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(251, 191, 36, 0.1);
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+
+        .page-date {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #fbbf24;
+        }
+
+        .stats-section {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-icon {
+            font-size: 1.125rem;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+
+        .stat-value {
+            font-size: 0.875rem;
+            font-weight: 400;
+            color: #fbbf24;
+        }
+
+        /* Sources Grid */
+        .sources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            flex: 1;
+            min-height: 0;
+            align-content: start;
+        }
+
+        @media (min-width: 768px) {
+            .sources-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .sources-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Source Card */
+        .source-card {
+            backdrop-filter: blur(20px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.03) 100%);
+            border: 1px solid rgba(251, 191, 36, 0.15);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            /* 增加卡片高度 */
+            max-height: 580px;
+            min-height: 450px;
+        }
+
+        .source-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--card-color), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .source-card:hover {
+            border-color: rgba(251, 191, 36, 0.3);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.05) 100%);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(251, 191, 36, 0.15);
+        }
+
+        .source-card:hover::before {
+            opacity: 1;
+        }
+
+
+        /* 不同卡片的主题色 */
+        .source-card.red {
+            --card-color: #ef4444;
+        }
+
+        .source-card.blue {
+            --card-color: #3b82f6;
+        }
+
+        .source-card.green {
+            --card-color: #10b981;
+        }
+
+        .source-card.cyan {
+            --card-color: #06b6d4;
+        }
+
+        .source-card.orange {
+            --card-color: #b41bac;
+        }
+
+        .source-card.purple {
+            --card-color: #a855f7;
+        }
+
+        .source-card.yellow {
+            --card-color: #fbbf24;
+        }
+
+        /* Source Header */
+        .source-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(251, 191, 36, 0.1);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .source-header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--card-color);
+            border-radius: 2px;
+        }
+
+        .source-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .source-icon {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.3));
+        }
+
+        .source-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--card-color), #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .source-header-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .refresh-icon {
+            width: 20px;
+            height: 20px;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #9ca3af;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+        }
+
+        .source-card:hover .refresh-icon {
+            opacity: 0.8;
+        }
+
+        /* Items List - 添加滚动 */
+        .items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 8px;
+            min-height: 0;
+        }
+
+        /* 自定义滚动条样式 */
+        .items-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .items-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 3px;
+        }
+
+        .items-list::-webkit-scrollbar-thumb {
+            background: rgba(251, 191, 36, 0.3);
+            border-radius: 3px;
+            transition: background 0.3s ease;
+        }
+
+        .items-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(251, 191, 36, 0.5);
+        }
+
+        /* Firefox 滚动条样式 */
+        .items-list {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(251, 191, 36, 0.3) rgba(255, 255, 255, 0.03);
+        }
+
+        .item {
+            display: flex;
+            gap: 10px;
+            padding: 6px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .item:hover {
+            background: rgba(251, 191, 36, 0.05);
+            transform: translateX(4px);
+        }
+
+        .rank {
+            color: #fbbf24;
+            font-weight: bold;
+            font-size: 0.8125rem;
+            min-width: 18px;
+            flex-shrink: 0;
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+        }
+
+        .item:nth-child(1) .rank,
+        .item:nth-child(2) .rank,
+        .item:nth-child(3) .rank {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 0.9375rem;
+        }
+
+        .item-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .item-title {
+            color: #d1d5db;
+            font-size: 0.8125rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            line-height: 1.4;
+            display: -webkit-box;
+            line-clamp: 2;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .item:hover .item-title {
+            color: #fbbf24;
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 1;
+            padding: 16px 24px;
+            border-top: 1px solid rgba(251, 191, 36, 0.1);
+            flex-shrink: 0;
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .footer-text {
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.75rem;
+        }
+
+        /* 响应式 */
+        @media (max-width: 767px) {
+
+            header,
+            main,
+            footer {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+
+            .header-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-title h1 {
+                font-size: 1.5rem;
+            }
+
+            .page-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .stats-section {
+                gap: 16px;
+            }
+
+            .sources-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .source-card {
+                max-height: 450px;
+                min-height: 380px;
+            }
+        }
+
+        /* 小屏幕优化 */
+        @media (max-height: 800px) {
+            .source-card {
+                max-height: 450px;
+                min-height: 360px;
+            }
+        }
+
+        @media (max-height: 700px) {
+            .source-card {
+                max-height: 380px;
+                min-height: 320px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-container">
+            <a href="/" class="header-title">
+                <h1>Briefy</h1>
+                <p>Your daily brief, powered by AI</p>
+            </a>
+            <form class="date-picker" action="" method="get">
+                <label for="date-input">选择日期：</label>
+                <input type="date" id="date-input" name="date" />
+            </form>
+        </div>
+    </header>
+    <main>
+        <div class="page-meta">
+            <div class="page-date" id="page-date">热门新闻汇总</div>
+            <div class="stats-section">
+                <div class="stat-card">
+                    <span class="stat-icon">⚡</span>
+                    <span class="stat-label">实时更新</span>
+                    <span class="stat-value">每5分钟</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">🔥</span>
+                    <span class="stat-label">数据源</span>
+                    <span class="stat-value" id="source-count">0个</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">📈</span>
+                    <span class="stat-label">热搜条数</span>
+                    <span class="stat-value" id="item-count">0条</span>
+                </div>
+            </div>
+        </div>
+        <div class="sources-grid" id="sources-grid">
+        </div>
+    </main>
+    <template id="source-card-template">
+        <div class="source-card">
+            <div class="source-header">
+                <div class="source-header-left">
+                    <span class="source-icon"></span>
+                    <div class="source-name"></div>
+                </div>
+                <div class="source-header-right">
+                    <span class="refresh-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M23 4v6h-6"></path>
+                            <path d="M1 20v-6h6"></path>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                        </svg>
+                    </span>
+                </div>
+            </div>
+            <div class="items-list"></div>
+        </div>
+    </template>
+    <template id="source-item-template">
+        <div class="item">
+            <div class="rank"></div>
+            <div class="item-content">
+                <a class="item-title" target="_blank" rel="noopener noreferrer"></a>
+            </div>
+        </div>
+    </template>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-text">
+                © 2025 Briefy | 数据来源于各平台，仅供参考
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Mock data
+        const trendingData = {
+            selected_date: "2025-11-22",
+            selected_date_display: "2025-11-22",
+            sources: [
+                { name: "财联社", meta: { icon: "💰", color_class: "red" }, items: [] },
+                { name: "华尔街见闻", meta: { icon: "📈", color_class: "green" }, items: [] },
+                { name: "百度热搜", meta: { icon: "🔍", color_class: "blue" }, items: [] },
+                { name: "金十数据", meta: { icon: "📊", color_class: "cyan" }, items: [] },
+                { name: "凤凰网", meta: { icon: "💎", color_class: "purple" }, items: [] },
+                { name: "今日头条", meta: { icon: "📅", color_class: "orange" }, items: [] },
+            ],
+            source_count: 6,
+            item_count: 30,
+        };
+
+        // 生成示例数据
+        trendingData.sources.forEach(source => {
+            for (let i = 1; i <= 5; i++) {
+                source.items.push({
+                    rank: i,
+                    title: `示例新闻标题 ${i}`,
+                    link: "#"
+                });
+            }
+        });
+
+        function sanitizeTitle(title) {
+            const div = document.createElement('div');
+            div.textContent = title;
+            return div.innerHTML.replace(/&lt;br\/&gt;/g, '<br/>').replace(/&lt;br \/&gt;/g, '<br/>');
+        }
+
+        function createCard(source) {
+            const cardTemplate = document.getElementById('source-card-template');
+            const itemTemplate = document.getElementById('source-item-template');
+            if (!cardTemplate || !itemTemplate) {
+                return null;
+            }
+
+            const fragment = cardTemplate.content.cloneNode(true);
+            const cardEl = fragment.querySelector('.source-card');
+            const meta = source.meta || {};
+            const items = source.items || [];
+            const colorClass = meta.color_class || 'green';
+            const icon = meta.icon || '💎';
+
+            cardEl.className = `source-card ${colorClass}`;
+
+            const iconEl = fragment.querySelector('.source-icon');
+            if (iconEl) {
+                iconEl.textContent = icon;
+            }
+
+            const nameEl = fragment.querySelector('.source-name');
+            if (nameEl) {
+                nameEl.textContent = source.name || '';
+            }
+
+            const itemsList = fragment.querySelector('.items-list');
+            if (itemsList) {
+                itemsList.innerHTML = '';
+                items.forEach((item) => {
+                    const itemFragment = itemTemplate.content.cloneNode(true);
+                    const rankEl = itemFragment.querySelector('.rank');
+                    if (rankEl) {
+                        rankEl.textContent = item.rank;
+                    }
+                    const linkEl = itemFragment.querySelector('.item-title');
+                    if (linkEl) {
+                        linkEl.href = item.link;
+                        linkEl.innerHTML = sanitizeTitle(item.title);
+                    }
+                    itemsList.appendChild(itemFragment);
+                });
+            }
+
+            return fragment;
+        }
+
+        function renderPage() {
+            if (!trendingData) return;
+
+            // 更新日期
+            const dateInput = document.getElementById('date-input');
+            if (dateInput) {
+                dateInput.value = trendingData.selected_date;
+            }
+
+            // 更新页面日期显示
+            const pageDate = document.getElementById('page-date');
+            if (pageDate) {
+                pageDate.textContent = `热门新闻汇总 ${trendingData.selected_date_display}`;
+            }
+
+            // 更新统计
+            const sourceCount = document.getElementById('source-count');
+            if (sourceCount) {
+                sourceCount.textContent = `${trendingData.source_count}个`;
+            }
+
+            const itemCount = document.getElementById('item-count');
+            if (itemCount) {
+                itemCount.textContent = `${trendingData.item_count}条`;
+            }
+
+            // 渲染卡片
+            const grid = document.getElementById('sources-grid');
+            if (grid && trendingData.sources) {
+                grid.innerHTML = '';
+                trendingData.sources.forEach((source) => {
+                    const cardFragment = createCard(source);
+                    if (cardFragment) {
+                        grid.appendChild(cardFragment);
+                    }
+                });
+            }
+        }
+
+        // 页面加载完成后渲染
+        window.addEventListener('DOMContentLoaded', renderPage);
+
+        // 日期选择器事件
+        const dateInput = document.getElementById('date-input');
+        if (dateInput) {
+            dateInput.addEventListener('change', () => {
+                if (dateInput.form) {
+                    dateInput.form.submit();
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
